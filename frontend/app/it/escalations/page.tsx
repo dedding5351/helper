@@ -1,27 +1,29 @@
-import * as React from "react";
-import { Suspense } from "react";
-import { IssueRow, Issue } from "../components/IssueRow";
-import { IssueDetailModal } from "../components/IssueDetailModal";
+"use client";
 
-const escalatedIssues: Issue[] = [
-  {
-    id: "IT-423",
-    title: "Network timeout on staging database",
-    status: "Auto-Escalated",
-    priority: "High",
-    assignee: "Sarah Jenkins",
-    time: "2m ago",
-  },
-  {
-    id: "IT-415",
-    title: "Cannot provision user via Okta API",
-    status: "Auto-Escalated",
-    priority: "High",
-    time: "5h ago",
-  },
-];
+import * as React from "react";
+import { Suspense, useEffect, useState } from "react";
+import { IssueRow } from "../components/IssueRow";
+import { IssueDetailModal } from "../components/IssueDetailModal";
+import { IssueService, Issue } from "../services/issue.service";
 
 export default function EscalationsPage() {
+  const [issues, setIssues] = useState<Issue[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadIssues() {
+      setLoading(true);
+      try {
+        const response = await IssueService.getIssues({ status: "Auto-Escalated" });
+        setIssues(response.data);
+      } catch (error) {
+        console.error("Failed to load issues", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadIssues();
+  }, []);
   return (
     <div className="flex h-screen flex-col">
       {/* Top bar */}
@@ -51,9 +53,15 @@ export default function EscalationsPage() {
       {/* List Content */}
       <main className="flex-1 overflow-auto">
         <div className="flex flex-col pb-8">
-          {escalatedIssues.map((issue) => (
-            <IssueRow key={issue.id} issue={issue} />
-          ))}
+          {loading ? (
+            <div className="p-8 text-center text-sm text-muted-foreground">Loading tickets...</div>
+          ) : issues.length === 0 ? (
+            <div className="p-8 text-center text-sm text-muted-foreground">No escalated tickets.</div>
+          ) : (
+            issues.map((issue) => (
+              <IssueRow key={issue.id} issue={issue} />
+            ))
+          )}
         </div>
       </main>
 

@@ -1,39 +1,29 @@
+"use client";
+
 import * as React from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-
-const runbooks = [
-  {
-    id: "RB-001",
-    title: "Network Restoration via AWS NAT Gateway Reset",
-    author: "Infrastructure Team",
-    tags: ["AWS", "Network", "Automated"],
-    status: "Active",
-  },
-  {
-    id: "RB-002",
-    title: "Okta User Provisioning Sync Fix",
-    author: "Identity Team",
-    tags: ["Okta", "IAM"],
-    status: "Active",
-  },
-  {
-    id: "RB-003",
-    title: "macOS Sequoia VPN Client Patch",
-    author: "Endpoints Team",
-    tags: ["macOS", "VPN", "Manual"],
-    status: "Active",
-  },
-  {
-    id: "RB-004",
-    title: "Database Staging Environment Rollback",
-    author: "Data Team",
-    tags: ["PostgreSQL", "Staging"],
-    status: "Deprecated",
-  },
-];
+import { RunbookService, Runbook } from "../services/runbook.service";
 
 export default function RunbooksPage() {
+  const [runbooks, setRunbooks] = useState<Runbook[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadRunbooks() {
+      setLoading(true);
+      try {
+        const response = await RunbookService.getRunbooks();
+        setRunbooks(response.data);
+      } catch (error) {
+        console.error("Failed to load runbooks", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadRunbooks();
+  }, []);
   return (
     <div className="flex h-screen flex-col">
       {/* Top bar */}
@@ -48,8 +38,17 @@ export default function RunbooksPage() {
 
       {/* Grid Content */}
       <main className="flex-1 overflow-auto px-8 pb-12 pt-4">
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {runbooks.map((rb) => (
+        {loading ? (
+          <div className="flex items-center justify-center h-48">
+            <span className="text-muted-foreground text-sm">Loading runbooks...</span>
+          </div>
+        ) : runbooks.length === 0 ? (
+          <div className="flex items-center justify-center h-48">
+            <span className="text-muted-foreground text-sm">No runbooks available.</span>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {runbooks.map((rb) => (
             <div
               key={rb.id}
               className="group flex cursor-pointer flex-col justify-between rounded-xl border border-outline-variant/15 bg-surface-container-lowest p-6 transition-all hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(44,52,55,0.05)]"
@@ -86,6 +85,7 @@ export default function RunbooksPage() {
             </div>
           ))}
         </div>
+        )}
       </main>
     </div>
   );

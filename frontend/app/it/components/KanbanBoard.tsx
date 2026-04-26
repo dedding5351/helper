@@ -1,8 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { Issue } from "./IssueRow";
+import { Issue } from "../services/issue.service";
 import { KanbanCard } from "./KanbanCard";
+import { IssueService } from "../services/issue.service";
 
 type Column = {
   id: string;
@@ -11,7 +12,7 @@ type Column = {
   issues: Issue[];
 };
 
-export function KanbanBoard({ issues: initialIssues }: { issues: Issue[] }) {
+export function KanbanBoard({ issues: initialIssues, onStatusChange }: { issues: Issue[], onStatusChange?: () => void }) {
   const [issues, setIssues] = React.useState<Issue[]>(initialIssues);
 
   // Derive columns from state
@@ -47,18 +48,29 @@ export function KanbanBoard({ issues: initialIssues }: { issues: Issue[] }) {
     e.dataTransfer.dropEffect = "move";
   };
 
-  const handleDrop = (e: React.DragEvent, statusMapped: Issue["status"]) => {
+  const handleDrop = async (e: React.DragEvent, statusMapped: Issue["status"]) => {
     e.preventDefault();
     const issueId = e.dataTransfer.getData("issueId");
     
     if (issueId) {
+      // Optimistically update UI
       setIssues(prev => prev.map(issue => {
         if (issue.id === issueId) {
-          // If moving from Auto-Escalated to Triage, it naturally becomes 'Open'
           return { ...issue, status: statusMapped };
         }
         return issue;
       }));
+
+      // Persist to backend
+      try {
+        await IssueService.updateIssueStatus(issueId, statusMapped);
+        if (onStatusChange) {
+          onStatusChange();
+        }
+      } catch (error) {
+        console.error("Failed to update issue status", error);
+        // Revert on error could be implemented here by reloading issues
+      }
     }
   };
 

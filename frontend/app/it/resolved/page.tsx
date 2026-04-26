@@ -1,35 +1,29 @@
-import * as React from "react";
-import { Suspense } from "react";
-import { IssueRow, Issue } from "../components/IssueRow";
-import { IssueDetailModal } from "../components/IssueDetailModal";
+"use client";
 
-const resolvedIssues: Issue[] = [
-  {
-    id: "IT-420",
-    title: "Monitor replacement needed - Desk 4B",
-    status: "Resolved",
-    priority: "Low",
-    assignee: "Sarah Jenkins",
-    time: "3h ago",
-  },
-  {
-    id: "IT-418",
-    title: "Access request for AWS Production env",
-    status: "Resolved",
-    priority: "High",
-    assignee: "Mike Chen",
-    time: "1d ago",
-  },
-  {
-    id: "IT-412",
-    title: "Jira webhook not firing on ticket transition",
-    status: "Resolved",
-    priority: "Medium",
-    time: "2d ago",
-  },
-];
+import * as React from "react";
+import { Suspense, useEffect, useState } from "react";
+import { IssueRow } from "../components/IssueRow";
+import { IssueDetailModal } from "../components/IssueDetailModal";
+import { IssueService, Issue } from "../services/issue.service";
 
 export default function ResolvedPage() {
+  const [issues, setIssues] = useState<Issue[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadIssues() {
+      setLoading(true);
+      try {
+        const response = await IssueService.getIssues({ status: "Resolved" });
+        setIssues(response.data);
+      } catch (error) {
+        console.error("Failed to load issues", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadIssues();
+  }, []);
   return (
     <div className="flex h-screen flex-col">
       {/* Top bar */}
@@ -70,9 +64,15 @@ export default function ResolvedPage() {
       {/* List Content */}
       <main className="flex-1 overflow-auto">
         <div className="flex flex-col pb-8">
-          {resolvedIssues.map((issue) => (
-            <IssueRow key={issue.id} issue={issue} />
-          ))}
+          {loading ? (
+            <div className="p-8 text-center text-sm text-muted-foreground">Loading tickets...</div>
+          ) : issues.length === 0 ? (
+            <div className="p-8 text-center text-sm text-muted-foreground">No resolved tickets.</div>
+          ) : (
+            issues.map((issue) => (
+              <IssueRow key={issue.id} issue={issue} />
+            ))
+          )}
         </div>
       </main>
 

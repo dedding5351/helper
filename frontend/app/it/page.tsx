@@ -1,43 +1,39 @@
-import * as React from "react";
-import { Suspense } from "react";
-import { IssueRow, Issue } from "./components/IssueRow";
-import { IssueDetailModal } from "./components/IssueDetailModal";
+"use client";
 
-const dummyIssues: Issue[] = [
-  {
-    id: "IT-423",
-    title: "Network timeout on staging database",
-    status: "Auto-Escalated",
-    priority: "High",
-    assignee: "Sarah Jenkins",
-    time: "2m ago",
-  },
-  {
-    id: "IT-422",
-    title: "Request for new Adobe CC license",
-    status: "Open",
-    priority: "Medium",
-    time: "15m ago",
-  },
-  {
-    id: "IT-421",
-    title: "SSO Login failing for regional office",
-    status: "In Progress",
-    priority: "High",
-    assignee: "Mike Chen",
-    time: "1h ago",
-  },
-  {
-    id: "IT-420",
-    title: "Monitor replacement needed - Desk 4B",
-    status: "Resolved",
-    priority: "Low",
-    assignee: "Sarah Jenkins",
-    time: "3h ago",
-  },
-];
+import * as React from "react";
+import { Suspense, useEffect, useState } from "react";
+import { IssueRow } from "./components/IssueRow";
+import { IssueDetailModal } from "./components/IssueDetailModal";
+import { BulkActionBar } from "./components/BulkActionBar";
+import { IssueService, Issue } from "./services/issue.service";
+import { useSelection } from "./hooks/useSelection";
 
 export default function ITDashboardPage() {
+  const [issues, setIssues] = useState<Issue[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<"unassigned" | "me" | "all">("all");
+  const { selectedIds, toggle, selectAll, deselectAll, isSelected, count } = useSelection();
+
+  async function loadIssues() {
+    setLoading(true);
+    try {
+      let assignee;
+      if (filter === "unassigned") assignee = "null";
+      if (filter === "me") assignee = "Sarah Jenkins";
+      
+      const response = await IssueService.getIssues(assignee ? { assignee } : undefined);
+      setIssues(response.data);
+    } catch (error) {
+      console.error("Failed to load issues", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    loadIssues();
+  }, [filter]);
+
   return (
     <>
       {/* Top bar */}
@@ -47,9 +43,24 @@ export default function ITDashboardPage() {
             Inbox
           </h1>
           <nav className="mt-1 flex gap-6 text-sm font-medium">
-            <button className="text-foreground border-b-2 border-primary pb-1">Unassigned (1)</button>
-            <button className="text-muted-foreground pb-1 transition-colors hover:text-foreground">Assigned to Me (2)</button>
-            <button className="text-muted-foreground pb-1 transition-colors hover:text-foreground">All (4)</button>
+            <button 
+              onClick={() => setFilter("unassigned")}
+              className={`pb-1 transition-colors ${filter === "unassigned" ? "text-foreground border-b-2 border-primary" : "text-muted-foreground hover:text-foreground"}`}
+            >
+              Unassigned
+            </button>
+            <button 
+              onClick={() => setFilter("me")}
+              className={`pb-1 transition-colors ${filter === "me" ? "text-foreground border-b-2 border-primary" : "text-muted-foreground hover:text-foreground"}`}
+            >
+              Assigned to Me
+            </button>
+            <button 
+              onClick={() => setFilter("all")}
+              className={`pb-1 transition-colors ${filter === "all" ? "text-foreground border-b-2 border-primary" : "text-muted-foreground hover:text-foreground"}`}
+            >
+              All
+            </button>
           </nav>
         </div>
         <div className="flex items-center gap-4">
@@ -69,7 +80,26 @@ export default function ITDashboardPage() {
       {/* List Header */}
       <div className="flex items-center justify-between gap-4 px-8 py-4 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
         <div className="flex flex-1 items-center gap-4">
-          <div className="w-6 text-center">Pri</div>
+          <div className="w-6 flex justify-center">
+            <button
+              onClick={() => {
+                if (count === issues.length && issues.length > 0) {
+                  deselectAll();
+                } else {
+                  selectAll(issues.map(i => i.id));
+                }
+              }}
+              className={`h-4 w-4 rounded-sm border transition-all ${
+                count === issues.length && issues.length > 0
+                  ? "bg-primary border-primary text-white flex items-center justify-center"
+                  : "border-muted-foreground/30 hover:border-muted-foreground/60"
+              }`}
+            >
+              {count === issues.length && issues.length > 0 && (
+                <span className="material-symbols-outlined text-[12px] font-bold">check</span>
+              )}
+            </button>
+          </div>
           <div className="w-16">ID</div>
           <div className="flex-1">Title</div>
         </div>
@@ -83,16 +113,36 @@ export default function ITDashboardPage() {
       {/* List Content */}
       <main className="flex-1 overflow-auto">
         <div className="flex flex-col pb-8">
-          {dummyIssues.map((issue) => (
-            <IssueRow key={issue.id} issue={issue} />
-          ))}
+          {loading ? (
+            <div className="p-8 text-center text-sm text-muted-foreground">Loading tickets...</div>
+          ) : issues.length === 0 ? (
+            <div className="p-8 text-center text-sm text-muted-foreground">No tickets found.</div>
+          ) : (
+            issues.map((issue) => (
+              <IssueRow 
+                key={issue.id} 
+                issue={issue} 
+                selected={isSelected(issue.id)}
+                onToggle={toggle}
+              />
+            ))
+          )}
         </div>
       </main>
 
-      {/* Modal wrapped in Suspense for useSearchParams */}
       <Suspense fallback={null}>
         <IssueDetailModal />
       </Suspense>
+
+      <BulkActionBar 
+        selectedCount={count}
+        selectedIds={Array.from(selectedIds)}
+        onDeselectAll={deselectAll}
+        onComplete={() => {
+          deselectAll();
+          loadIssues();
+        }}
+      />
     </>
   );
 }

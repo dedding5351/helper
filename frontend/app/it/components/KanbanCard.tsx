@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Issue } from "./IssueRow";
+import { Issue } from "../services/issue.service";
 
 export function KanbanCard({ issue }: { issue: Issue }) {
   function getPriorityIcon(priority: Issue["priority"]) {
@@ -60,7 +60,7 @@ export function KanbanCard({ issue }: { issue: Issue }) {
           )}
           <span className="text-xs text-muted-foreground">{issue.assignee || "Unassigned"}</span>
         </div>
-        <span className="text-xs text-muted-foreground/60">{issue.time}</span>
+        <span className="text-xs text-muted-foreground/60">{new Date(issue.createdAt).toLocaleDateString()}</span>
       </div>
     </div>
   );

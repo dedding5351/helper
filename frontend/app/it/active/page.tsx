@@ -1,47 +1,35 @@
+"use client";
+
 import * as React from "react";
 import Link from "next/link";
-import { Suspense } from "react";
-import { IssueRow, Issue } from "../components/IssueRow";
+import { Suspense, useEffect, useState, use } from "react";
+import { IssueRow } from "../components/IssueRow";
 import { KanbanBoard } from "../components/KanbanBoard";
 import { IssueDetailModal } from "../components/IssueDetailModal";
+import { IssueService, Issue } from "../services/issue.service";
 
-const activeIssues: Issue[] = [
-  {
-    id: "IT-421",
-    title: "SSO Login failing for regional office",
-    status: "In Progress",
-    priority: "High",
-    assignee: "Mike Chen",
-    time: "1h ago",
-  },
-  {
-    id: "IT-423",
-    title: "Network timeout on staging database",
-    status: "Auto-Escalated",
-    priority: "High",
-    assignee: "Sarah Jenkins",
-    time: "2m ago",
-  },
-  {
-    id: "IT-425",
-    title: "VPN Client not connecting on macOS Sequoia",
-    status: "Open",
-    priority: "Medium",
-    time: "30m ago",
-  },
-  {
-    id: "IT-419",
-    title: "Update security groups for new microservice",
-    status: "In Progress",
-    priority: "Medium",
-    assignee: "Sarah Jenkins",
-    time: "4h ago",
-  },
-];
-
-export default async function ActiveIssuesPage({ searchParams }: { searchParams: Promise<{ view?: string }> }) {
-  const params = await searchParams;
+export default function ActiveIssuesPage({ searchParams }: { searchParams: Promise<{ view?: string }> }) {
+  const params = use(searchParams);
   const isBoardView = params.view === "board";
+
+  const [issues, setIssues] = useState<Issue[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const loadIssues = async () => {
+    setLoading(true);
+    try {
+      const response = await IssueService.getIssues({ status: "Open,In Progress,Auto-Escalated,Blocked" });
+      setIssues(response.data);
+    } catch (error) {
+      console.error("Failed to load issues", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadIssues();
+  }, []);
 
   return (
     <div className="flex h-screen flex-col">
@@ -89,7 +77,11 @@ export default async function ActiveIssuesPage({ searchParams }: { searchParams:
 
       {isBoardView ? (
         <main className="flex-1 overflow-hidden">
-          <KanbanBoard issues={activeIssues} />
+          {loading ? (
+            <div className="p-8 text-center text-sm text-muted-foreground">Loading board...</div>
+          ) : (
+            <KanbanBoard issues={issues} onStatusChange={loadIssues} />
+          )}
         </main>
       ) : (
         <>
@@ -110,9 +102,15 @@ export default async function ActiveIssuesPage({ searchParams }: { searchParams:
           {/* List Content */}
           <main className="flex-1 overflow-auto">
             <div className="flex flex-col pb-8">
-              {activeIssues.map((issue) => (
-                <IssueRow key={issue.id} issue={issue} />
-              ))}
+              {loading ? (
+                <div className="p-8 text-center text-sm text-muted-foreground">Loading tickets...</div>
+              ) : issues.length === 0 ? (
+                <div className="p-8 text-center text-sm text-muted-foreground">No active tickets.</div>
+              ) : (
+                issues.map((issue) => (
+                  <IssueRow key={issue.id} issue={issue} />
+                ))
+              )}
             </div>
           </main>
         </>

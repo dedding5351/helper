@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { CreateTicketModal } from "./CreateTicketModal";
 
 type NavItem = {
   label: string;
@@ -49,9 +50,11 @@ function SidebarNavLink({ item, currentPath }: { item: NavItem; currentPath: str
 
 export function Sidebar() {
   const pathname = usePathname();
+  const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
 
   return (
-    <aside className="hidden w-64 shrink-0 flex-col justify-between bg-[#eaeff2] px-5 py-7 md:flex">
+    <>
+      <aside className="hidden w-64 shrink-0 flex-col justify-between bg-[#eaeff2] px-5 py-7 md:flex">
       <div>
         <Link href="/it" className="mb-10 flex items-center gap-3 px-2">
           <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary-gradient text-sm font-bold text-white">
@@ -70,7 +73,10 @@ export function Sidebar() {
           </span>
         </Link>
 
-        <button className="bg-primary-gradient mb-8 flex h-auto w-full items-center justify-center gap-2 rounded-md border-none px-4 py-3 text-sm font-medium text-white shadow-md shadow-primary/20 transition-opacity hover:opacity-90">
+        <button 
+          onClick={() => setIsCreateModalOpen(true)}
+          className="bg-primary-gradient mb-8 flex h-auto w-full items-center justify-center gap-2 rounded-md border-none px-4 py-3 text-sm font-medium text-white shadow-md shadow-primary/20 transition-opacity hover:opacity-90"
+        >
           <span className="material-symbols-outlined text-[18px]">add</span>
           New Ticket
         </button>
@@ -88,5 +94,11 @@ export function Sidebar() {
         ))}
       </nav>
     </aside>
+    <CreateTicketModal 
+      isOpen={isCreateModalOpen} 
+      onClose={() => setIsCreateModalOpen(false)} 
+      onSuccess={() => window.location.reload()} 
+    />
+    </>
   );
 }

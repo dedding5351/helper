@@ -63,17 +63,35 @@ export class IssueService {
     return apiClient.get<{ data: IssueDetails }>(`/issues/${id}`);
   }
 
+  static async createIssue(data: { title: string; priority: string; assignee: string | null; description?: string }) {
+    return apiClient.post<Issue>("/issues/", data);
+  }
+
   /**
    * Updates the status of an issue.
    */
-  static async updateIssueStatus(id: string, status: IssueStatus): Promise<{ data: Issue }> {
-    return apiClient.patch<{ data: Issue }>(`/issues/${id}/status`, { status });
+  static async updateIssueStatus(id: string, status: IssueStatus): Promise<Issue> {
+    return apiClient.patch<Issue>(`/issues/${id}/status`, { status });
+  }
+
+  /**
+   * Updates multiple fields of an issue.
+   */
+  static async updateIssue(id: string, data: Partial<Omit<Issue, "id" | "createdAt">>): Promise<Issue> {
+    return apiClient.patch<Issue>(`/issues/${id}`, data);
+  }
+
+  static async bulkUpdateIssues(
+    issueIds: string[],
+    update: Partial<Omit<Issue, "id" | "createdAt">>
+  ): Promise<{ updated: number; issues: Issue[] }> {
+    return apiClient.patch("/issues/bulk", { issue_ids: issueIds, update });
   }
 
   /**
    * Adds a new comment/activity to an issue.
    */
-  static async addIssueComment(id: string, message: string): Promise<{ data: ActivityEvent }> {
-    return apiClient.post<{ data: ActivityEvent }>(`/issues/${id}/comments`, { message });
+  static async addIssueComment(id: string, message: string): Promise<ActivityEvent> {
+    return apiClient.post<ActivityEvent>(`/issues/${id}/comments`, { message });
   }
 }

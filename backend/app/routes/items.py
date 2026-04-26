@@ -4,7 +4,7 @@ from app.models.item import Item, ItemCreate
 from app.services.item_service import ItemService
 from app.core.dependencies import get_item_service
 
-router = APIRouter(prefix="/items", tags=["items"])
+router = APIRouter(tags=["items"])
 
 @router.get("/", response_model=List[Item])
 def list_items(service: ItemService = Depends(get_item_service)):

@@ -1,14 +1,16 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { Issue } from "../services/issue.service";
 
-export type Issue = {
-  id: string;
-  title: string;
-  status: "Open" | "In Progress" | "Resolved" | "Auto-Escalated" | "Blocked";
-  priority: "High" | "Medium" | "Low";
-  assignee?: string;
-  time: string;
-};
+function formatTime(dateString: string): string {
+  const date = new Date(dateString.endsWith("Z") ? dateString : dateString + "Z");
+  return date.toLocaleTimeString(undefined, {
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true,
+  });
+}
 
 function getPriorityIcon(priority: Issue["priority"]) {
   switch (priority) {
@@ -43,12 +45,49 @@ function getStatusBadge(status: Issue["status"]) {
   );
 }
 
-export function IssueRow({ issue }: { issue: Issue }) {
+export function IssueRow({ 
+  issue, 
+  selected, 
+  onToggle 
+}: { 
+  issue: Issue; 
+  selected?: boolean;
+  onToggle?: (id: string) => void;
+}) {
+  const handleClick = (e: React.MouseEvent) => {
+    if (e.metaKey || e.ctrlKey) {
+      e.preventDefault();
+      onToggle?.(issue.id);
+    }
+  };
+
   return (
-    <Link
-      href={`/it?issue=${issue.id}`}
-      className="group flex items-center justify-between gap-4 px-8 py-3 transition-colors hover:bg-[#f0f4f7]"
-    >
+    <div className="relative flex items-center">
+      {onToggle && (
+        <div className="absolute left-2 z-10 flex h-full items-center justify-center">
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onToggle(issue.id);
+            }}
+            className={`flex h-4 w-4 items-center justify-center rounded-sm transition-all ${
+              selected 
+                ? "bg-primary text-white" 
+                : "bg-secondary/20 hover:bg-secondary/40"
+            }`}
+          >
+            {selected && <span className="material-symbols-outlined text-[12px] font-bold">check</span>}
+          </button>
+        </div>
+      )}
+      <Link
+        href={`/it?issue=${issue.id}`}
+        onClick={handleClick}
+        className={`group flex flex-1 items-center justify-between gap-4 px-8 py-3 transition-colors ${
+          selected ? "bg-[#eaeff2]" : "hover:bg-[#f0f4f7]"
+        }`}
+      >
       <div className="flex flex-1 items-center gap-4">
         <div className="flex w-6 justify-center">
           {getPriorityIcon(issue.priority)}
@@ -77,10 +116,11 @@ export function IssueRow({ issue }: { issue: Issue }) {
             <span className="text-xs font-medium text-muted-foreground/50 border border-dashed border-muted-foreground/30 px-2 py-0.5 rounded-full">Unassigned</span>
           )}
         </div>
-        <div className="w-16 text-right text-xs text-muted-foreground">
-          {issue.time}
+        <div className="w-24 text-right text-xs text-muted-foreground">
+          {formatTime(issue.createdAt)}
         </div>
       </div>
-    </Link>
+      </Link>
+    </div>
   );
 }
