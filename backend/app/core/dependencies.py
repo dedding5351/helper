@@ -1,24 +1,22 @@
 from typing import Generator
 from fastapi import Depends
+from sqlalchemy.orm import Session
+from app.core.database import SessionLocal
 from app.repositories.item_repository import ItemRepository
 from app.services.item_service import ItemService
 
-# Mock Database Connection
-class MockDatabase:
-    def __init__(self):
-        self.data = {}
-
-# Singleton instance for the mock DB
-_mock_db_instance = MockDatabase()
-
-def get_db_connection() -> Generator[MockDatabase, None, None]:
+def get_db_connection() -> Generator[Session, None, None]:
     """
     Yields a database connection.
     In a real app, this would be a SQLAlchemy session, ChromaDB client, etc.
     """
-    yield _mock_db_instance
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
-def get_item_repository(db: MockDatabase = Depends(get_db_connection)) -> ItemRepository:
+def get_item_repository(db: Session = Depends(get_db_connection)) -> ItemRepository:
     """
     Injects the database connection into the ItemRepository.
     """

@@ -24,7 +24,7 @@ When contributing to this codebase, you must adhere to the following responsibil
 - **Rules for Agents:**
   - **No Business Logic:** Models must *never* contain business logic or database connections.
   - **Strict Typing:** Use strict type hints and Pydantic `Field` definitions to enforce validation (e.g., `Field(..., gt=0)`).
-  - **Separation of Concerns:** Maintain separate models for database representations vs. request payloads (e.g., `Item`, `ItemCreate`, `ItemUpdate`).
+  - **Separation of Concerns:** Maintain separate classes for database representations (SQLAlchemy `Base`) vs. request payloads (Pydantic `BaseModel`). These should be grouped together by domain in a single file (e.g., `app/models/item.py` contains `ItemDB`, `Item`, `ItemCreate`).
 
 ### B. Repositories (`app/repositories/`)
 **Purpose:** Handle all data access and persistence logic.
@@ -120,7 +120,31 @@ This ensures that instantiation logic is isolated, avoiding tight coupling, and 
 
 ---
 
-## 5. Development Standards
+## 5. Environment & Running the Server
+
+We use **`uv`** as our Python package manager and virtual environment tool for its extreme speed and reliability.
+
+### Setup Instructions
+1. Navigate to the `backend/` directory.
+2. Create the virtual environment using `uv`:
+   ```bash
+   uv venv
+   ```
+3. Install the dependencies:
+   ```bash
+   uv pip install -r requirements.txt
+   ```
+
+### Running the Server
+You can run the FastAPI development server effortlessly using `uv run`. This automatically runs the command within the context of the virtual environment without needing to explicitly activate it:
+
+```bash
+uv run uvicorn app.main:app --reload
+```
+
+---
+
+## 6. Development Standards
 
 - **Type Hinting:** Python type hints are mandatory for all function signatures (arguments and return types).
 - **FastAPI Features:** Leverage FastAPI's dependency injection system (`Depends()`) from the core dependencies hub for wiring Services into Routes.

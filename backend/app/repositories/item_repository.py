@@ -1,5 +1,6 @@
 from typing import List, Optional
-from app.models.item import Item
+from sqlalchemy.orm import Session
+from app.models.item import Item, ItemDB
 import uuid
 
 class ItemRepository:
@@ -7,17 +8,23 @@ class ItemRepository:
     Data Access Layer for Items.
     Handles direct interaction with the database.
     """
-    def __init__(self, db):
+    def __init__(self, db: Session):
         self.db = db
 
     def get_all(self) -> List[Item]:
-        return list(self.db.data.values())
+        db_items = self.db.query(ItemDB).all()
+        return [Item.model_validate(item) for item in db_items]
 
     def get_by_id(self, item_id: str) -> Optional[Item]:
-        return self.db.data.get(item_id)
+        db_item = self.db.query(ItemDB).filter(ItemDB.id == item_id).first()
+        if db_item:
+            return Item.model_validate(db_item)
+        return None
 
     def create(self, item_data: dict) -> Item:
         item_id = str(uuid.uuid4())
-        new_item = Item(id=item_id, **item_data)
-        self.db.data[item_id] = new_item
-        return new_item
+        db_item = ItemDB(id=item_id, **item_data)
+        self.db.add(db_item)
+        self.db.commit()
+        self.db.refresh(db_item)
+        return Item.model_validate(db_item)
