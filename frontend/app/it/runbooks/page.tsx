@@ -5,10 +5,12 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { RunbookService, Runbook } from "../services/runbook.service";
+import { CreateRunbookModal } from "../components/CreateRunbookModal";
 
 export default function RunbooksPage() {
   const [runbooks, setRunbooks] = useState<Runbook[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     async function loadRunbooks() {
@@ -24,6 +26,12 @@ export default function RunbooksPage() {
     }
     loadRunbooks();
   }, []);
+
+  const handleSuccess = () => {
+    // Reload runbooks after successful creation
+    setLoading(true);
+    RunbookService.getRunbooks().then(res => setRunbooks(res.data)).finally(() => setLoading(false));
+  };
   return (
     <div className="flex h-screen flex-col">
       {/* Top bar */}
@@ -31,7 +39,7 @@ export default function RunbooksPage() {
         <h1 className="text-2xl font-bold tracking-tight text-foreground" style={{ letterSpacing: "-0.02em" }}>
           Runbooks
         </h1>
-        <Button className="bg-primary-gradient border-none text-white shadow-lg shadow-primary/20 hover:opacity-90">
+        <Button onClick={() => setIsModalOpen(true)} className="bg-primary-gradient border-none text-white shadow-lg shadow-primary/20 hover:opacity-90">
           Create Runbook
         </Button>
       </header>
@@ -67,6 +75,11 @@ export default function RunbooksPage() {
                 <h3 className="mb-2 text-xl font-bold leading-snug tracking-tight text-foreground group-hover:text-primary">
                   {rb.title}
                 </h3>
+                {rb.description && (
+                  <p className="mb-3 text-sm text-muted-foreground/80 line-clamp-2">
+                    {rb.description}
+                  </p>
+                )}
                 <p className="text-xs font-medium text-muted-foreground/80">
                   Maintained by {rb.author}
                 </p>
@@ -87,6 +100,7 @@ export default function RunbooksPage() {
         </div>
         )}
       </main>
+      <CreateRunbookModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSuccess={handleSuccess} />
     </div>
   );
 }

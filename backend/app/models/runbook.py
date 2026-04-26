@@ -14,6 +14,8 @@ class RunbookDB(Base):
     author = Column(String, nullable=False)
     tags_json = Column(Text, nullable=True) # Stores JSON list of tags
     status = Column(String, nullable=False, index=True)
+    description = Column(Text, nullable=True)
+    source_filename = Column(String, nullable=True)
 
 
 # --- Pydantic Models ---
@@ -26,6 +28,8 @@ class Runbook(BaseModel):
     author: str
     tags: List[str] = []
     status: str
+    description: Optional[str] = None
+    sourceFilename: Optional[str] = None
 
     @classmethod
     def model_validate(cls, obj, *args, **kwargs):
@@ -42,10 +46,20 @@ class Runbook(BaseModel):
                 title=obj.title,
                 author=obj.author,
                 tags=tags,
-                status=obj.status
+                status=obj.status,
+                description=obj.description,
+                sourceFilename=obj.source_filename
             )
         return super().model_validate(obj, *args, **kwargs)
 
 
 class RunbookListResponse(BaseModel):
     data: List[Runbook]
+
+class RunbookCreate(BaseModel):
+    title: str
+    author: str
+    tags: List[str] = []
+    status: str = "Active"
+    description: Optional[str] = None
+    source_filename: Optional[str] = None

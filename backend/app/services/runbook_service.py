@@ -14,3 +14,10 @@ class RunbookService:
         return RunbookListResponse(
             data=[Runbook.model_validate(rb) for rb in db_runbooks]
         )
+
+    def get_runbook(self, runbook_id: str) -> Optional[Runbook]:
+        internal_id = int(runbook_id.replace("RB-", ""))
+        db_runbook = self.repository.get_by_id(internal_id)
+        if db_runbook:
+            return Runbook.model_validate(db_runbook)
+        return None

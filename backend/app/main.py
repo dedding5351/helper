@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routes import items, issues, runbooks, settings
+from app.routes import items, issues, runbooks, settings, knowledge
 from app.core.database import engine, Base
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.seed import seed_data
@@ -36,6 +36,7 @@ def startup_event():
 app.include_router(items.router, prefix="/api/v1/items")
 app.include_router(issues.router, prefix="/api/v1/issues")
 app.include_router(runbooks.router, prefix="/api/v1/runbooks")
+app.include_router(knowledge.router, prefix="/api/v1/runbooks")
 app.include_router(settings.router, prefix="/api/v1/settings")
 
 @app.get("/health")

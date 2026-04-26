@@ -61,6 +61,8 @@ pyasn1_modules==0.4.2
 pybase64==1.4.3
 pycparser==3.0
 pydantic==2.13.3
+pypdf==5.1.0
+python-multipart==0.0.17
 pydantic-settings==2.14.0
 pydantic_core==2.46.3
 Pygments==2.20.0

@@ -67,6 +67,32 @@ export class ApiClient {
     });
   }
 
+  public postFormData<T>(endpoint: string, formData: FormData, options?: RequestInit): Promise<T> {
+    const url = `${this.baseUrl}${endpoint}`;
+    
+    // Don't set Content-Type header so the browser sets it automatically with the boundary
+    const headers = { ...options?.headers };
+
+    return fetch(url, {
+      ...options,
+      method: "POST",
+      body: formData,
+      headers,
+    }).then(async (response) => {
+      if (!response.ok) {
+        let errorMessage = "API request failed";
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch (e) {
+          errorMessage = await response.text();
+        }
+        throw new ApiError(response.status, errorMessage);
+      }
+      return response.json();
+    });
+  }
+
   public patch<T>(endpoint: string, body: any, options?: RequestInit): Promise<T> {
     return this.request<T>(endpoint, {
       ...options,

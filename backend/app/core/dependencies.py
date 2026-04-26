@@ -11,6 +11,27 @@ from app.services.runbook_service import RunbookService
 from app.repositories.settings_repository import SettingsRepository
 from app.services.settings_service import SettingsService
 
+from app.repositories.knowledge_repository import KnowledgeRepository
+from app.repositories.embedding_repository import EmbeddingRepository
+from app.services.knowledge_service import KnowledgeService
+
+import chromadb
+from google import genai
+import os
+from dotenv import load_dotenv
+
+load_dotenv(".env.local")
+
+# Singleton clients
+_chroma_client = chromadb.PersistentClient(path="./chroma_db")
+_genai_client = genai.Client()
+
+def get_chroma_client() -> chromadb.ClientAPI:
+    return _chroma_client
+
+def get_genai_client() -> genai.Client:
+    return _genai_client
+
 def get_current_user_id() -> str:
     """Stubbed auth — returns hardcoded default user."""
     return "default-user"
@@ -58,3 +79,20 @@ def get_settings_repository(db: Session = Depends(get_db_connection)) -> Setting
 
 def get_settings_service(repository: SettingsRepository = Depends(get_settings_repository)) -> SettingsService:
     return SettingsService(repository=repository)
+
+# --- Knowledge & Embeddings ---
+def get_embedding_repository(
+    chroma: chromadb.ClientAPI = Depends(get_chroma_client),
+    genai_client: genai.Client = Depends(get_genai_client)
+) -> EmbeddingRepository:
+    return EmbeddingRepository(chroma_client=chroma, genai_client=genai_client)
+
+def get_knowledge_repository(db: Session = Depends(get_db_connection)) -> KnowledgeRepository:
+    return KnowledgeRepository(db=db)
+
+def get_knowledge_service(
+    runbook_repo: RunbookRepository = Depends(get_runbook_repository),
+    knowledge_repo: KnowledgeRepository = Depends(get_knowledge_repository),
+    embedding_repo: EmbeddingRepository = Depends(get_embedding_repository)
+) -> KnowledgeService:
+    return KnowledgeService(runbook_repo=runbook_repo, knowledge_repo=knowledge_repo, embedding_repo=embedding_repo)
