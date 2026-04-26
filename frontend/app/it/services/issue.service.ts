@@ -18,6 +18,8 @@ export interface Issue {
   status: IssueStatus;
   priority: IssuePriority;
   assignee?: string;
+  requester?: string;
+  description?: string;
   createdAt: string;
 }
 
@@ -28,6 +30,7 @@ export interface IssueDetails extends Issue {
 export interface IssueFilters {
   status?: string;
   assignee?: string;
+  requester?: string;
   limit?: number;
   offset?: number;
 }
@@ -49,6 +52,7 @@ export class IssueService {
     const params = new URLSearchParams();
     if (filters?.status) params.append("status", filters.status);
     if (filters?.assignee) params.append("assignee", filters.assignee);
+    if (filters?.requester) params.append("requester", filters.requester);
     if (filters?.limit) params.append("limit", filters.limit.toString());
     if (filters?.offset) params.append("offset", filters.offset.toString());
 
@@ -63,7 +67,7 @@ export class IssueService {
     return apiClient.get<{ data: IssueDetails }>(`/issues/${id}`);
   }
 
-  static async createIssue(data: { title: string; priority: string; assignee: string | null; description?: string }) {
+  static async createIssue(data: { title: string; priority: string; assignee: string | null; description?: string; requester?: string | null; status?: IssueStatus }) {
     return apiClient.post<Issue>("/issues/", data);
   }
 

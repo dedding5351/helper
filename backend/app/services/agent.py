@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 from dotenv import load_dotenv
 from livekit import rtc
 from livekit.agents import (
@@ -15,11 +16,21 @@ logger = logging.getLogger("agent-Test-Helper")
 
 load_dotenv(".env.local")
 
+SOLUTIONS_DIR = Path(__file__).resolve().parents[2] / "solutions"
+
+
+def _load_solutions() -> str:
+    parts = []
+    for path in sorted(SOLUTIONS_DIR.glob("*.md")):
+        parts.append(f"## {path.stem}\n\n{path.read_text()}")
+    return "\n\n".join(parts)
+
 
 class DefaultAgent(Agent):
     def __init__(self) -> None:
+        solutions = _load_solutions()
         super().__init__(
-            instructions="""You are a friendly, reliable voice assistant that answers questions, explains topics, and completes tasks with available tools.
+            instructions=f"""You are a friendly, reliable voice assistant that answers questions, explains topics, and completes tasks with available tools.
 
 # Output rules
 
@@ -49,7 +60,13 @@ You are interacting with the user via voice, and must apply the following rules 
 
 - Stay within safe, lawful, and appropriate use; decline harmful or out‑of‑scope requests.
 - For medical, legal, or financial topics, provide general information only and suggest consulting a qualified professional.
-- Protect privacy and minimize sensitive data.""",
+- Protect privacy and minimize sensitive data.
+
+# Solution guides
+
+Use the following internal guides as your source of truth when helping the user with cert, vpn, or wifi issues. Follow the steps in order and confirm each step before continuing.
+
+{solutions}""",
         )
     async def on_enter(self):
         await self.session.generate_reply(

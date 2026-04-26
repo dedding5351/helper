@@ -24,12 +24,13 @@ def bulk_update_issues(body: BulkIssueUpdate, service: IssueService = Depends(ge
 def list_issues(
     status: Optional[str] = Query(None, description="Comma-separated list of statuses, e.g. Open,Auto-Escalated"),
     assignee: Optional[str] = Query(None, description="Assignee filter"),
+    requester: Optional[str] = Query(None, description="Requester filter (user who submitted the ticket)"),
     limit: int = Query(50, ge=1, le=100),
     offset: int = Query(0, ge=0),
     service: IssueService = Depends(get_issue_service)
 ):
     """Retrieve a list of issues."""
-    return service.list_issues(status=status, assignee=assignee, limit=limit, offset=offset)
+    return service.list_issues(status=status, assignee=assignee, requester=requester, limit=limit, offset=offset)
 
 @router.post("/", response_model=Issue, status_code=201)
 def create_issue(body: IssueCreate, service: IssueService = Depends(get_issue_service)):

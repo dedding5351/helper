@@ -10,20 +10,23 @@ class IssueRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    def get_all(self, status: Optional[str] = None, assignee: Optional[str] = None, limit: int = 50, offset: int = 0) -> Tuple[List[IssueDB], int]:
+    def get_all(self, status: Optional[str] = None, assignee: Optional[str] = None, requester: Optional[str] = None, limit: int = 50, offset: int = 0) -> Tuple[List[IssueDB], int]:
         query = self.db.query(IssueDB)
-        
+
         if status:
             # Handle comma separated statuses like 'Open,Auto-Escalated'
             statuses = [s.strip() for s in status.split(',')]
             query = query.filter(IssueDB.status.in_(statuses))
-            
+
         if assignee:
             if assignee == "null":
                 query = query.filter(IssueDB.assignee.is_(None))
             else:
                 query = query.filter(IssueDB.assignee == assignee)
-            
+
+        if requester:
+            query = query.filter(IssueDB.requester == requester)
+
         total = query.count()
         issues = query.order_by(IssueDB.created_at.desc()).offset(offset).limit(limit).all()
         return issues, total
@@ -32,12 +35,13 @@ class IssueRepository:
         # IssueDB has eager/lazy loading config for activity_events in model or we can rely on standard relationships
         return self.db.query(IssueDB).filter(IssueDB.id == issue_id).first()
 
-    def create(self, title: str, priority: str, status: str = "Open", assignee: Optional[str] = None, description: Optional[str] = None) -> IssueDB:
+    def create(self, title: str, priority: str, status: str = "Open", assignee: Optional[str] = None, requester: Optional[str] = None, description: Optional[str] = None) -> IssueDB:
         db_issue = IssueDB(
             title=title,
             priority=priority,
             status=status,
             assignee=assignee,
+            requester=requester,
             description=description,
             created_at=datetime.utcnow()
         )

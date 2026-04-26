@@ -21,9 +21,9 @@ class IssueService:
         except ValueError:
             raise ValueError(f"Invalid issue ID format: {prefixed_id}. Must contain integer after prefix.")
 
-    def list_issues(self, status: Optional[str] = None, assignee: Optional[str] = None, limit: int = 50, offset: int = 0) -> IssueListResponse:
-        db_issues, total = self.repository.get_all(status=status, assignee=assignee, limit=limit, offset=offset)
-        
+    def list_issues(self, status: Optional[str] = None, assignee: Optional[str] = None, requester: Optional[str] = None, limit: int = 50, offset: int = 0) -> IssueListResponse:
+        db_issues, total = self.repository.get_all(status=status, assignee=assignee, requester=requester, limit=limit, offset=offset)
+
         return IssueListResponse(
             data=[Issue.model_validate(issue) for issue in db_issues],
             meta=IssueMeta(total=total, limit=limit, offset=offset)
@@ -39,19 +39,30 @@ class IssueService:
         return IssueDetailResponse(data=IssueDetail.model_validate(db_issue))
 
     def create_issue(self, issue_data: IssueCreate) -> Issue:
+        allowed_statuses = {"Open", "In Progress", "Auto-Escalated", "Resolved"}
+        status = issue_data.status or "Open"
+        if status not in allowed_statuses:
+            raise ValueError(f"Invalid status. Allowed values are: {', '.join(allowed_statuses)}")
+
         db_issue = self.repository.create(
             title=issue_data.title,
             priority=issue_data.priority,
             assignee=issue_data.assignee,
+            requester=issue_data.requester,
             description=issue_data.description,
-            status="Open"
+            status=status,
         )
-        # Add initial activity event
+
+        creation_message = (
+            "Ticket manually escalated by requester."
+            if status == "Auto-Escalated"
+            else "Ticket created."
+        )
         self.repository.add_comment(
             issue_id=db_issue.id,
             event_type="System",
             author="System",
-            message="Ticket created."
+            message=creation_message,
         )
         return Issue.model_validate(db_issue)
 

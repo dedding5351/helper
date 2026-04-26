@@ -16,6 +16,7 @@ class IssueDB(Base):
     status = Column(String, nullable=False, index=True)
     priority = Column(String, nullable=False)
     assignee = Column(String, nullable=True, index=True)
+    requester = Column(String, nullable=True, index=True)
     description = Column(Text, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
@@ -80,6 +81,7 @@ class Issue(BaseModel):
     status: str
     priority: str
     assignee: Optional[str] = None
+    requester: Optional[str] = None
     description: Optional[str] = None
     createdAt: datetime
 
@@ -92,6 +94,7 @@ class Issue(BaseModel):
                 status=obj.status,
                 priority=obj.priority,
                 assignee=obj.assignee,
+                requester=obj.requester,
                 description=obj.description,
                 createdAt=obj.created_at
             )
@@ -100,7 +103,7 @@ class Issue(BaseModel):
 
 class IssueDetail(Issue):
     activityFeed: List[ActivityEvent] = Field(default_factory=list)
-    
+
     @classmethod
     def model_validate(cls, obj, *args, **kwargs):
         if isinstance(obj, IssueDB):
@@ -110,6 +113,7 @@ class IssueDetail(Issue):
                 status=obj.status,
                 priority=obj.priority,
                 assignee=obj.assignee,
+                requester=obj.requester,
                 description=obj.description,
                 createdAt=obj.created_at,
                 activityFeed=[ActivityEvent.model_validate(event) for event in obj.activity_events]
@@ -139,7 +143,9 @@ class IssueCreate(BaseModel):
     title: str
     priority: str
     assignee: Optional[str] = None
+    requester: Optional[str] = None
     description: Optional[str] = None
+    status: Optional[str] = None
 
 class IssueUpdate(BaseModel):
     status: Optional[str] = None

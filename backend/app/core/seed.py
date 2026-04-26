@@ -12,11 +12,11 @@ def seed_data(db: Session):
 
     # --- Issues ---
     issues = [
-        IssueDB(title="Network timeout on staging database", status="Auto-Escalated", priority="High", assignee="Sarah Jenkins", description="Users are reporting a 504 Gateway Timeout when trying to access the staging database via the internal tool. Logs show network configuration drift."),
-        IssueDB(title="VPN connection drops intermittently", status="Open", priority="Medium", description="Multiple users working remotely are experiencing intermittent VPN drops every 30-45 minutes on macOS Sequoia."),
+        IssueDB(title="Network timeout on staging database", status="Auto-Escalated", priority="High", assignee="Sarah Jenkins", requester="default-user", description="Users are reporting a 504 Gateway Timeout when trying to access the staging database via the internal tool. Logs show network configuration drift."),
+        IssueDB(title="VPN connection drops intermittently", status="Open", priority="Medium", requester="default-user", description="Multiple users working remotely are experiencing intermittent VPN drops every 30-45 minutes on macOS Sequoia."),
         IssueDB(title="Slack integration webhook failing", status="In Progress", priority="High", assignee="Sarah Jenkins", description="The Jira-to-Slack webhook is returning a 401 Unauthorized since the secret rotation yesterday."),
         IssueDB(title="New employee onboarding — laptop provisioning", status="Open", priority="Low", description="Standard onboarding for John Doe starting next Monday. Needs MacBook Pro 16\" and access to core services."),
-        IssueDB(title="Production SSL certificate expiring in 7 days", status="Resolved", priority="Critical", assignee="System", description="Automated alert: wildcart cert for *.projectname.com is expiring in 7 days.")
+        IssueDB(title="Production SSL certificate expiring in 7 days", status="Resolved", priority="Critical", assignee="System", requester="default-user", description="Automated alert: wildcart cert for *.projectname.com is expiring in 7 days.")
     ]
     db.add_all(issues)
     db.commit()
