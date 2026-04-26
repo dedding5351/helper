@@ -1,16 +1,62 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --primary: #0070f3;
-  --spacing-unit: 8px;
-  --border-radius: 4px;
-}
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@custom-variant dark (&:is(.dark *));
+
+/* ============================================
+   LUMINOUS MINIMALISM — Design Token System
+   ============================================ */
+
+:root {
+  /* Core Palette (DESIGN_SYSTEM §2) */
+  --primary: #5D5CDE;
+  --primary-gradient-start: #4f4dcf;
+  --primary-gradient-end: #7777fa;
+  --primary-fixed-dim: #6a69ec;
+  --secondary: #94A3B8;
+  --tertiary: #8C6C94;
+  --neutral: #F8FAFC;
+
+  /* Surface Hierarchy (DESIGN_SYSTEM §2, Layer System) */
+  --background: #f7f9fb;
+  --foreground: #2c3437;
+  --surface: #f7f9fb;
+  --surface-container: #eaeff2;
+  --surface-container-low: #f0f4f7;
+  --surface-container-lowest: #ffffff;
+  --surface-container-high: #e3e9ed;
+
+  /* Text Colors (DESIGN_SYSTEM §3, §6: never pure black) */
+  --on-surface: #2c3437;
+  --on-surface-variant: #596064;
+  --on-primary: #ffffff;
+
+  /* Borders & Outlines (DESIGN_SYSTEM §4: Ghost Border) */
+  --outline-variant: #acb3b7;
+
+  /* Elevation (DESIGN_SYSTEM §4: Ambient Shadows) */
+  --shadow-ambient: 0 20px 40px rgba(44, 52, 55, 0.05);
+  --shadow-ambient-hover: 0 24px 48px rgba(44, 52, 55, 0.08);
+
+  /* Radii (DESIGN_SYSTEM §6: md or lg only) */
+  --radius: 0.5rem;
+
+  /* shadcn token overrides */
+  --primary-foreground: #ffffff;
+  --card: #ffffff;
+  --card-foreground: #2c3437;
+  --popover: #ffffff;
+  --popover-foreground: #2c3437;
+  --muted: #f0f4f7;
+  --muted-foreground: #596064;
+  --accent: #f0f4f7;
+  --accent-foreground: #2c3437;
+  --destructive: #dc2626;
+  --border: rgba(172, 179, 183, 0.15);
+  --input: rgba(172, 179, 183, 0.15);
+  --ring: #5D5CDE;
+  --secondary-foreground: #2c3437;
 }
 
 * {
@@ -23,9 +69,8 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
   background: var(--background);
-  color: var(--foreground);
+  color: var(--on-surface);
 }
 
 a {
@@ -33,6 +78,58 @@ a {
   text-decoration: none;
 }
 
-button {
-  cursor: pointer;
+@theme inline {
+  --font-heading: var(--font-sans);
+  --font-sans: var(--font-sans);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  --animate-float: float 6s ease-in-out infinite;
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  button:not(:disabled), [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  html {
+    @apply font-sans;
+  }
 }

@@ -1,9 +1,18 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Inter } from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  title: "Modern Next.js Application",
-  description: "A fluent and modern application scaffolded following AGENTS.md",
+  title: "The Radiant Archive — AI Enterprise Support",
+  description:
+    "Transform complex IT interactions into a weightless experience. Our AI agent seamlessly navigates your enterprise data, turning heavy workflows into luminous clarity.",
 };
 
 export default function RootLayout({
@@ -12,10 +21,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>
-        {children}
-      </body>
+    <html lang="en" className={cn("font-sans", inter.variable)}>
+      <body>{children}</body>
     </html>
   );
 }
