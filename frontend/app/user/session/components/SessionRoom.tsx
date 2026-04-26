@@ -28,37 +28,35 @@ export function SessionRoom() {
   const [conn, setConn] = React.useState<TokenResponse | null>(null);
   const [demo, setDemo] = React.useState(forceDemo);
   const [error, setError] = React.useState<string | null>(null);
-
-  React.useEffect(() => {
-    if (forceDemo) return;
-    let cancelled = false;
-    (async () => {
-      try {
-        const res = await fetch("/api/livekit-token", { method: "POST" });
-        if (res.status === 503) {
-          if (!cancelled) setDemo(true);
-          return;
-        }
-        if (!res.ok) throw new Error(`Token request failed (${res.status})`);
-        const data = (await res.json()) as TokenResponse;
-        if (!cancelled) setConn(data);
-      } catch (err) {
-        if (!cancelled)
-          setError(err instanceof Error ? err.message : "Connection failed");
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [forceDemo]);
+  const [connecting, setConnecting] = React.useState(false);
 
   const handleEnd = React.useCallback(() => {
     router.push("/user");
   }, [router]);
 
+  const handleConnect = React.useCallback(async () => {
+    setError(null);
+    setConnecting(true);
+    try {
+      const res = await fetch("/api/livekit-token", { method: "POST" });
+      if (res.status === 503) {
+        setDemo(true);
+        return;
+      }
+      if (!res.ok) throw new Error(`Token request failed (${res.status})`);
+      const data = (await res.json()) as TokenResponse;
+      setConn(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Connection failed");
+    } finally {
+      setConnecting(false);
+    }
+  }, []);
+
   if (error) return <ConnectionError message={error} />;
   if (demo) return <DemoStage onEnd={handleEnd} />;
-  if (!conn) return <ConnectingState />;
+  if (!conn)
+    return <ConnectCTA onConnect={handleConnect} connecting={connecting} />;
 
   return (
     <LiveKitRoom
@@ -114,7 +112,13 @@ function LiveStage({ onEnd }: { onEnd: () => void }) {
   );
 }
 
-function ConnectingState() {
+function ConnectCTA({
+  onConnect,
+  connecting,
+}: {
+  onConnect: () => void;
+  connecting: boolean;
+}) {
   return (
     <div className="absolute inset-0 flex items-center justify-center">
       <div
@@ -126,9 +130,17 @@ function ConnectingState() {
           filter: "blur(40px)",
         }}
       />
-      <p className="relative text-xs font-semibold uppercase tracking-[0.25em] text-white/70">
-        Connecting…
-      </p>
+      <button
+        type="button"
+        onClick={onConnect}
+        disabled={connecting}
+        className="bg-primary-gradient relative inline-flex items-center gap-3 rounded-md border-none px-10 py-5 text-base font-semibold text-white shadow-lg shadow-primary/20 transition-opacity hover:opacity-90 disabled:cursor-wait disabled:opacity-60"
+      >
+        <span className="material-symbols-outlined text-[22px]">
+          headset_mic
+        </span>
+        {connecting ? "Connecting…" : "Connect to Live Support"}
+      </button>
     </div>
   );
 }

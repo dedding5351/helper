@@ -1,5 +1,11 @@
 import { NextResponse } from "next/server";
-import { AccessToken } from "livekit-server-sdk";
+import {
+  AccessToken,
+  RoomAgentDispatch,
+  RoomConfiguration,
+} from "livekit-server-sdk";
+
+const AGENT_NAME = "Test-Helper";
 
 export const runtime = "nodejs";
 
@@ -31,6 +37,9 @@ export async function POST() {
     canPublish: true,
     canSubscribe: true,
     canPublishData: true,
+  });
+  at.roomConfig = new RoomConfiguration({
+    agents: [new RoomAgentDispatch({ agentName: AGENT_NAME })],
   });
 
   const token = await at.toJwt();

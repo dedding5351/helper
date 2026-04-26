@@ -97,3 +97,5 @@ zipp==3.23.1
 zstandard==0.25.0
 fastapi
 sqlalchemy
+livekit-agents[google,images,silero,turn-detector]
+livekit-plugins-ai-coustics
