@@ -84,7 +84,7 @@
     @apply border-border/15; /* Enforces the 15% opacity ghost border globally */
   }
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-transparent text-foreground font-sans antialiased;
     letter-spacing: -0.01em; /* Tightens body rhythm */
   }
   
