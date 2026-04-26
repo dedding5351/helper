@@ -1,202 +1,169 @@
+import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { FeatureCard } from "@/components/FeatureCard/FeatureCard";
-import { HeroIllustration } from "@/components/HeroIllustration/HeroIllustration";
-import {
-  Eye,
-  MessageSquare,
-  TrendingUp,
-  Sparkles,
-} from "lucide-react";
+import { Card } from "@/components/ui/card";
 
-const FEATURES = [
-  {
-    icon: <Eye className="size-5" strokeWidth={1.5} />,
-    title: "Ambient Visual Analysis",
-    description:
-      "The system continuously monitors environmental context without explicit prompting. It pre-fetches solutions by analyzing on-screen errors and contextual logs before the user even begins typing a query.",
-  },
-  {
-    icon: <MessageSquare className="size-5" strokeWidth={1.5} />,
-    title: "Multimodal Conversations",
-    description:
-      "Interact seamlessly across text, code snippets, and voice. The agent maintains deep context, ensuring complex technical dialogues flow naturally without repetitive clarification.",
-  },
-  {
-    icon: <TrendingUp className="size-5" strokeWidth={1.5} />,
-    title: "Autonomous Escalation",
-    description:
-      "When confidence thresholds are met, the agent automatically routes critical issues to human specialists, compiling a complete, weightless summary of prior troubleshooting steps.",
-  },
-  {
-    icon: <Sparkles className="size-5" strokeWidth={1.5} />,
-    title: "Zero-Friction Integrations",
-    description:
-      "Connects instantly to your existing infrastructure. No borders, no heavy configuration screens. Just a clean flow of data between your tools and the agent.",
-  },
-] as const;
-
-const NAV_LINKS = ["Product", "Features", "Case Studies", "Documentation"];
-
-const FOOTER_LINKS = [
-  "Privacy Policy",
-  "Terms of Service",
-  "Security",
-  "Status",
-];
-
-/**
- * Landing Page — "The Radiant Archive"
- *
- * Server Component (no 'use client' directive) per AGENTS.md §1.
- * Semantic HTML with <main>, <header>, <nav>, <section>, <footer> per AGENTS.md §7.
- */
 export default function Home() {
   return (
-    <main className="min-h-screen">
-      {/* ============================
-          NAVBAR
-          ============================ */}
-      <header className="w-full">
-        <nav
-          className="mx-auto flex max-w-7xl items-center justify-between px-8 py-5 lg:px-16"
-          aria-label="Main navigation"
-        >
-          {/* Logo */}
-          <div className="text-base font-bold text-[var(--on-surface)]">
-            Project Name
-          </div>
-
-          {/* Navigation Links */}
-          <div className="hidden items-center gap-8 md:flex">
-            {NAV_LINKS.map((link) => (
-              <a
-                key={link}
-                href={`#${link.toLowerCase().replace(/\s+/g, "-")}`}
-                className={`text-sm transition-colors duration-200 ${
-                  link === "Product"
-                    ? "font-medium text-[var(--primary)] underline underline-offset-4"
-                    : "text-[var(--on-surface-variant)] hover:text-[var(--primary-fixed-dim)]"
-                }`}
-              >
-                {link}
-              </a>
-            ))}
-          </div>
-
-          {/* Actions */}
-          <div className="flex items-center gap-4">
-            <a
-              href="#sign-in"
-              className="hidden text-sm text-[var(--on-surface-variant)] transition-colors duration-200 hover:text-[var(--primary-fixed-dim)] sm:inline-block"
-            >
-              Sign In
-            </a>
-            <Button variant="default" size="sm">
-              Connect to Support
-            </Button>
-          </div>
-        </nav>
-      </header>
-
-      {/* ============================
-          HERO SECTION
-          ============================ */}
-      <section
-        id="hero"
-        className="mx-auto grid max-w-7xl items-center gap-12 px-8 pt-20 pb-24 lg:grid-cols-2 lg:px-16 lg:pt-28 lg:pb-32"
-      >
-        {/* Left column — Text content */}
-        <div className="flex max-w-xl flex-col gap-8">
-          <Badge variant="chip">
-            <Sparkles className="size-3" strokeWidth={1.5} />
-            The Radiant Archive
-          </Badge>
-
-          <h1 className="text-4xl font-bold leading-[1.15] tracking-tight lg:text-5xl">
-            <span className="text-[var(--on-surface)]">Resolve Support</span>
-            <br />
-            <span className="text-[var(--primary)]">
-              At The Speed Of Light.
-            </span>
-          </h1>
-
-          <p className="max-w-md text-base leading-relaxed text-[var(--on-surface-variant)]">
-            Transform complex IT interactions into a weightless experience. Our
-            AI agent seamlessly navigates your enterprise data, turning heavy
-            workflows into luminous clarity.
-          </p>
-
-          <div className="flex items-center gap-4">
-            <Button variant="default" size="lg">
-              Get Started →
-            </Button>
-            <Button variant="outline" size="lg">
-              View Documentation
-            </Button>
-          </div>
+    <>
+      <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+      
+      {/* Navigation */}
+      <nav className="flex justify-between items-center py-6 px-8 md:px-16 max-w-7xl mx-auto border-none">
+        <div className="font-bold text-xl tracking-tight text-foreground">Project Name</div>
+        <div className="hidden md:flex space-x-12 text-sm font-medium">
+          <a href="#" className="text-primary border-b-2 border-primary pb-1">Product</a>
+          <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Features</a>
+          <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Case Studies</a>
+          <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Documentation</a>
         </div>
-
-        {/* Right column — Illustration */}
-        <div className="hidden justify-center lg:flex">
-          <HeroIllustration />
+        <div className="flex items-center space-x-6">
+          <Button variant="ghost" className="text-primary hover:text-primary/80 font-medium bg-transparent shadow-none hover:bg-primary/5">Sign In</Button>
+          <Button className="bg-primary-gradient text-white rounded-md border-none shadow-md hover:opacity-90">Connect to Support</Button>
         </div>
-      </section>
+      </nav>
 
-      {/* ============================
-          FEATURES SECTION
-          ============================ */}
-      <section
-        id="features"
-        className="w-full bg-[var(--surface-container-low)]"
-      >
-        <div className="mx-auto max-w-7xl px-8 py-20 lg:px-16 lg:py-28">
-          {/* Section header */}
-          <div className="mb-14 max-w-lg">
-            <h2 className="mb-4 text-3xl font-bold tracking-tight text-[var(--on-surface)]">
-              Architected for Clarity
-            </h2>
-            <p className="text-base leading-relaxed text-[var(--on-surface-variant)]">
-              Intelligent systems that operate silently in the background,
-              surfacing only what you need, exactly when you need it.
+      <main className="w-full">
+        {/* HERO SECTION */}
+        <section className="py-24 px-8 md:px-16 max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-16 lg:gap-24">
+          {/* Left Side */}
+          <div className="w-full lg:w-1/2 flex flex-col items-start text-left">
+            <Badge variant="secondary" className="mb-10 rounded-full px-4 py-1.5 bg-secondary/10 text-xs tracking-widest text-muted-foreground font-semibold flex items-center shadow-none border-none uppercase">
+              <span className="material-symbols-outlined text-[16px] mr-2 text-primary">auto_awesome</span>
+              THE RADIANT ARCHIVE
+            </Badge>
+            
+            <h1 className="text-6xl lg:text-7xl font-bold tracking-tight text-foreground leading-[1.05] mb-6" style={{ letterSpacing: "-0.03em" }}>
+              Resolve Support <br />
+              <span className="text-primary bg-clip-text text-transparent bg-primary-gradient">At The Speed Of <br /> Light.</span>
+            </h1>
+            
+            <p className="text-xl text-muted-foreground leading-relaxed mb-10 max-w-md font-light">
+              Transform complex IT interactions into a weightless experience. Our AI agent seamlessly navigates your enterprise data, turning heavy workflows into luminous clarity.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row items-center gap-4 w-full">
+              <Button className="bg-primary-gradient border-none px-8 py-6 text-base rounded-md shadow-xl shadow-primary/20 w-full sm:w-auto hover:opacity-90 transition-opacity">
+                Get Started <span className="material-symbols-outlined ml-2 text-[20px]">arrow_forward</span>
+              </Button>
+              <Button variant="secondary" className="px-8 py-6 text-base rounded-md bg-secondary/10 text-primary hover:bg-secondary/20 border-none shadow-none w-full sm:w-auto transition-colors">
+                View Documentation
+              </Button>
+            </div>
+          </div>
+
+          {/* Right Side Visual */}
+          <div className="w-full lg:w-1/2 relative h-[450px] lg:h-[500px] bg-black/[0.02] rounded-[2rem] overflow-hidden flex items-center justify-center shadow-none border-none">
+            {/* Subtle grid background */}
+            <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(44,52,55,0.03) 1px, transparent 0)', backgroundSize: '24px 24px' }}></div>
+            
+            {/* Wireframe lines */}
+            <div className="absolute left-16 top-32 space-y-5">
+               <div className="w-24 h-2.5 bg-foreground/5 rounded-full"></div>
+               <div className="w-48 h-2.5 bg-foreground/5 rounded-full"></div>
+               <div className="w-32 h-2.5 bg-foreground/5 rounded-full"></div>
+            </div>
+
+            {/* Floating Modal */}
+            <Card className="absolute right-8 bottom-24 w-72 glass-modal border-none rounded-xl overflow-hidden p-6 z-10">
+              <div className="flex items-start gap-4 mb-6 pb-6 border-b border-border">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0 mt-1">
+                  <span className="material-symbols-outlined text-[20px]">support_agent</span>
+                </div>
+                <div>
+                  <div className="text-sm font-bold text-foreground mb-1 tracking-tight">Issue Resolved</div>
+                  <div className="text-[13px] text-muted-foreground leading-snug">Network timeout fixed</div>
+                </div>
+              </div>
+              <div className="text-[11px] font-bold text-primary tracking-widest text-right uppercase mt-2">
+                Auto-Escalated
+              </div>
+            </Card>
+          </div>
+        </section>
+
+        {/* ARCHITECTED FOR CLARITY (Bento Grid) */}
+        <section className="py-24 px-8 md:px-16 max-w-7xl mx-auto">
+          <div className="mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground mb-4">Architected for Clarity</h2>
+            <p className="text-muted-foreground text-lg max-w-2xl font-light">
+              Intelligent systems that operate silently in the background, surfacing only what you need, exactly when you need it.
             </p>
           </div>
 
-          {/* Feature grid — 2×2 */}
-          <div className="grid gap-6 sm:grid-cols-2">
-            {FEATURES.map((feature) => (
-              <FeatureCard
-                key={feature.title}
-                icon={feature.icon}
-                title={feature.title}
-                description={feature.description}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Card 1 - Span 1 */}
+            <Card className="p-10 border-none bg-card shadow-[0_10px_40px_rgba(44,52,55,0.03)] rounded-2xl flex flex-col md:col-span-1">
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-8">
+                <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>visibility</span>
+              </div>
+              <h3 className="text-xl font-bold text-foreground mb-4 tracking-tight">Ambient Visual Analysis</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed font-light">
+                The system continuously monitors environmental context without explicit prompting. It pre-fetches solutions by analyzing on-screen errors and contextual logs before the user even begins typing a query.
+              </p>
+            </Card>
 
-      {/* ============================
-          FOOTER
-          ============================ */}
-      <footer className="w-full bg-[var(--surface-container-low)]">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-8 py-8 sm:flex-row lg:px-16">
-          <p className="text-xs tracking-[0.05em] text-[var(--on-surface-variant)] uppercase">
+            {/* Card 2 - Span 2 */}
+            <Card className="p-10 border-none bg-card shadow-[0_10px_40px_rgba(44,52,55,0.03)] rounded-2xl flex flex-col md:col-span-2">
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-8">
+                <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>chat</span>
+              </div>
+              <h3 className="text-xl font-bold text-foreground mb-4 tracking-tight">Multimodal Conversations</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed font-light max-w-md">
+                Interact seamlessly across text, code snippets, and voice. The agent maintains deep context, ensuring complex technical dialogues flow naturally without repetitive clarification.
+              </p>
+            </Card>
+
+            {/* Card 3 - Span 1 */}
+            <Card className="p-10 border-none bg-card shadow-[0_10px_40px_rgba(44,52,55,0.03)] rounded-2xl flex flex-col md:col-span-1">
+              <div className="w-12 h-12 rounded-xl bg-destructive/10 flex items-center justify-center text-destructive mb-8">
+                <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>call_merge</span>
+              </div>
+              <h3 className="text-xl font-bold text-foreground mb-4 tracking-tight">Autonomous Escalation</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed font-light">
+                When confidence thresholds are met, the agent automatically routes critical issues to human specialists, compiling a complete, weightless summary of prior troubleshooting steps.
+              </p>
+            </Card>
+
+            {/* Card 4 - Span 2 */}
+            <Card className="p-10 border-none bg-card shadow-[0_10px_40px_rgba(44,52,55,0.03)] rounded-2xl flex flex-col md:flex-row items-center md:col-span-2 overflow-hidden relative">
+              <div className="w-full md:w-1/2 relative z-10 pr-0 md:pr-8 mb-10 md:mb-0">
+                 <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-8">
+                   <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>hub</span>
+                 </div>
+                 <h3 className="text-xl font-bold text-foreground mb-4 tracking-tight">Zero-Friction Integrations</h3>
+                 <p className="text-sm text-muted-foreground leading-relaxed font-light">
+                   Connects instantly to your existing infrastructure. No borders, no heavy configuration screens. Just a clean flow of data between your tools and the agent.
+                 </p>
+              </div>
+              <div className="w-full md:w-1/2 h-48 relative flex items-center justify-center">
+                 {/* Diagram visual */}
+                 <div className="absolute w-full h-[1px] bg-border/40 top-1/2 -translate-y-1/2"></div>
+                 <div className="flex gap-10 relative z-10 items-center justify-center w-full">
+                    <div className="w-12 h-12 rounded-xl bg-background flex items-center justify-center shadow-sm"><span className="material-symbols-outlined text-muted-foreground text-[20px]">database</span></div>
+                    <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shadow-sm"><span className="material-symbols-outlined text-[28px]">api</span></div>
+                    <div className="w-12 h-12 rounded-xl bg-background flex items-center justify-center shadow-sm"><span className="material-symbols-outlined text-muted-foreground text-[20px]">cloud</span></div>
+                 </div>
+              </div>
+            </Card>
+          </div>
+        </section>
+      </main>
+
+      {/* Footer */}
+      <footer className="w-full py-16 px-8 md:px-16 mt-16 border-t border-border">
+        <div className="flex flex-col md:flex-row justify-between items-center w-full max-w-7xl mx-auto gap-8">
+          <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
             © 2024 Project Name. The Radiant Archive.
-          </p>
-          <div className="flex items-center gap-6">
-            {FOOTER_LINKS.map((link) => (
-              <a
-                key={link}
-                href={`#${link.toLowerCase().replace(/\s+/g, "-")}`}
-                className="text-xs tracking-[0.05em] text-[var(--on-surface-variant)] uppercase transition-colors duration-200 hover:text-[var(--primary-fixed-dim)]"
-              >
-                {link}
-              </a>
-            ))}
+          </div>
+          <div className="flex flex-wrap justify-center space-x-8 text-xs font-semibold text-muted-foreground uppercase tracking-widest">
+            <a href="#" className="hover:text-foreground transition-colors">Privacy Policy</a>
+            <a href="#" className="hover:text-foreground transition-colors">Terms of Service</a>
+            <a href="#" className="hover:text-foreground transition-colors">Security</a>
+            <a href="#" className="hover:text-foreground transition-colors">Status</a>
           </div>
         </div>
       </footer>
-    </main>
+    </>
   );
 }

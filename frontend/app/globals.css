@@ -4,132 +4,99 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* ============================================
-   LUMINOUS MINIMALISM — Design Token System
-   ============================================ */
-
-:root {
-  /* Core Palette (DESIGN_SYSTEM §2) */
-  --primary: #5D5CDE;
-  --primary-gradient-start: #4f4dcf;
-  --primary-gradient-end: #7777fa;
-  --primary-fixed-dim: #6a69ec;
-  --secondary: #94A3B8;
-  --tertiary: #8C6C94;
-  --neutral: #F8FAFC;
-
-  /* Surface Hierarchy (DESIGN_SYSTEM §2, Layer System) */
-  --background: #f7f9fb;
-  --foreground: #2c3437;
-  --surface: #f7f9fb;
-  --surface-container: #eaeff2;
-  --surface-container-low: #f0f4f7;
-  --surface-container-lowest: #ffffff;
-  --surface-container-high: #e3e9ed;
-
-  /* Text Colors (DESIGN_SYSTEM §3, §6: never pure black) */
-  --on-surface: #2c3437;
-  --on-surface-variant: #596064;
-  --on-primary: #ffffff;
-
-  /* Borders & Outlines (DESIGN_SYSTEM §4: Ghost Border) */
-  --outline-variant: #acb3b7;
-
-  /* Elevation (DESIGN_SYSTEM §4: Ambient Shadows) */
-  --shadow-ambient: 0 20px 40px rgba(44, 52, 55, 0.05);
-  --shadow-ambient-hover: 0 24px 48px rgba(44, 52, 55, 0.08);
-
-  /* Radii (DESIGN_SYSTEM §6: md or lg only) */
-  --radius: 0.5rem;
-
-  /* shadcn token overrides */
-  --primary-foreground: #ffffff;
-  --card: #ffffff;
-  --card-foreground: #2c3437;
-  --popover: #ffffff;
-  --popover-foreground: #2c3437;
-  --muted: #f0f4f7;
-  --muted-foreground: #596064;
-  --accent: #f0f4f7;
-  --accent-foreground: #2c3437;
-  --destructive: #dc2626;
-  --border: rgba(172, 179, 183, 0.15);
-  --input: rgba(172, 179, 183, 0.15);
-  --ring: #5D5CDE;
-  --secondary-foreground: #2c3437;
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-  background: var(--background);
-  color: var(--on-surface);
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
 @theme inline {
-  --font-heading: var(--font-sans);
-  --font-sans: var(--font-sans);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+    --font-heading: var(--font-sans);
+    --font-sans: var(--font-sans);
+    
+    /* Mapping the color variables. We wrap them in hsl() since the user provided raw HSL values */
+    --color-background: hsl(var(--background));
+    --color-foreground: hsl(var(--foreground));
+    --color-card: hsl(var(--card));
+    --color-card-foreground: hsl(var(--card-foreground));
+    --color-popover: hsl(var(--popover));
+    --color-popover-foreground: hsl(var(--popover-foreground));
+    --color-primary: hsl(var(--primary));
+    --color-primary-foreground: hsl(var(--primary-foreground));
+    --color-secondary: hsl(var(--secondary));
+    --color-secondary-foreground: hsl(var(--secondary-foreground));
+    --color-muted: hsl(var(--muted));
+    --color-muted-foreground: hsl(var(--muted-foreground));
+    --color-accent: hsl(var(--accent));
+    --color-accent-foreground: hsl(var(--accent-foreground));
+    --color-destructive: hsl(var(--destructive));
+    --color-destructive-foreground: hsl(var(--destructive-foreground));
+    --color-border: hsl(var(--border));
+    --color-input: hsl(var(--input));
+    --color-ring: hsl(var(--ring));
 
-  --animate-float: float 6s ease-in-out infinite;
-
-  @keyframes float {
-    0%, 100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-8px);
-    }
-  }
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
 }
 
 @layer base {
+  :root {
+    /* Layer 0: Base Canvas (#f7f9fb) */
+    --background: 210 33% 98%;
+    /* Dark Foreground (#2c3437) avoiding pure black */
+    --foreground: 196 11% 19%;
+
+    /* Layer 2: Elevated Content Cards (#ffffff) */
+    --card: 0 0% 100%;
+    --card-foreground: 196 11% 19%;
+
+    /* Floating Modals / Dropdowns */
+    --popover: 210 33% 98%;
+    --popover-foreground: 196 11% 19%;
+
+    /* Primary: #5D5CDE */
+    --primary: 241 64% 61%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary: #94A3B8 */
+    --secondary: 215 25% 65%;
+    --secondary-foreground: 196 11% 19%;
+
+    /* Tertiary/Muted: #F8FAFC background with #8C6C94 text */
+    --muted: 210 40% 98%;
+    --muted-foreground: 288 17% 50%;
+
+    /* Accent / Selection Chips (#f6d0fd background, #614469 text) */
+    --accent: 290 89% 90%;
+    --accent-foreground: 287 21% 33%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    /* The "Ghost Border" Fallback (#acb3b7 at 15% opacity logic applied here) */
+    --border: 202 9% 69%;
+    --input: 202 9% 69%;
+    --ring: 241 64% 61%;
+
+    --radius: 0.5rem;
+  }
+}
+
+/* Base resets for the 'No-Line' rule and typography */
+@layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border/15; /* Enforces the 15% opacity ghost border globally */
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+    letter-spacing: -0.01em; /* Tightens body rhythm */
   }
-  button:not(:disabled), [role="button"]:not(:disabled) {
-    cursor: pointer;
+  
+  /* Helper for the Glass & Gradient Rule */
+  .bg-primary-gradient {
+    background: linear-gradient(135deg, #4f4dcf 0%, #7777fa 100%);
   }
-  html {
-    @apply font-sans;
+
+  /* Helper for Layer 3 Glass Modals */
+  .glass-modal {
+    background-color: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 20px 40px rgba(44, 52, 55, 0.05); /* Ambient shadow */
   }
 }
