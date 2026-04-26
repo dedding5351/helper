@@ -18,7 +18,7 @@ export default function Home() {
           <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Documentation</a>
         </div>
         <div className="flex items-center space-x-6">
-          <Button variant="ghost" className="text-primary hover:text-primary/80 font-medium bg-transparent shadow-none hover:bg-primary/5">Sign In</Button>
+          <Button variant="ghost" className="text-primary hover:text-primary/80 font-medium bg-transparent shadow-none hover:bg-primary/5" render={<a href="/signin" />}>Sign In</Button>
           <Button className="bg-primary-gradient text-white rounded-md border-none shadow-md hover:opacity-90">Connect to Support</Button>
         </div>
       </nav>
