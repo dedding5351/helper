@@ -24,22 +24,30 @@ The App Router is the foundation of our application. We prioritize Server Compon
 - **Server State:** Use the server-side cache and revalidation for data-driven state.
 - **Client State:** Use `useState` or `useReducer` for localized UI state. For complex global UI state, use lightweight libraries like Zustand or React Context (sparingly).
 
-## 4. Styling & UI Aesthetics
+## 4. Styling & UI Aesthetics: Luminous Minimalism
 
-- **Hybrid Approach:** Use **Tailwind CSS** for shadcn/ui components and rapid layout prototyping, and **CSS Modules** for complex, custom component logic or highly specific animations.
-- **Tailwind for Composition:** Leverage Tailwind utility classes for spacing, colors, and responsive design to maintain consistency with the component library.
-- **Minimize Class Bloat:** Avoid deeply nested or overly complex utility chains. If a component requires extensive styling, encapsulate it within a dedicated CSS Module or a custom shadcn-based component.
-- **Modern CSS Features:** Embrace CSS Variables (integrated with Tailwind's theme), Grid, Flexbox, and Container Queries.
+We adhere to the **Luminous Minimalism** design system. Our goal is to transform complex interactions into a weightless, "editorial" experience using light as the primary architect.
+
+- **The "No-Line" Rule:** Absolute prohibition of 1px solid borders for sectioning or containment. Define boundaries solely through background color shifts (`surface` to `surface-container`) or tonal transitions.
+- **Tonal Architecture:**
+    - **Layer 0 (Base):** `#f7f9fb`
+    - **Layer 1 (Nav/Sidebar):** `#eaeff2`
+    - **Layer 2 (Cards/Content):** `#ffffff` (Surface-container-lowest)
+- **The Glass & Gradient Rule:** Use linear gradients (135deg) from `primary` (#4f4dcf) to `primary-container` (#7777fa) for primary actions. Use `backdrop-filter: blur()` for floating elements and modals.
+- **Ambient Shadows:** Only use large, soft, low-opacity shadows (e.g., `0 20px 40px rgba(44, 52, 55, 0.05)`). Avoid harsh, dark shadows.
+- **Typography:** Use **Inter**. Tighten tracking for displays (`-0.02em`) and increase it for labels (`0.05em` uppercase). Never use pure black for text; use `on-surface` (#2c3437).
 
 ## 5. Component Library: shadcn/ui
 
-We use **shadcn/ui** as our foundational component library. It provides accessible, unstyled primitives (Radix UI) that we own and customize.
+We use **shadcn/ui** as our foundational component library, customized to fit the **Luminous Minimalism** design system.
 
-- **Component Installation:** Use the shadcn CLI (`npx shadcn@latest add <component>`) to bring components into the project.
-- **Location:** All shadcn components must reside in `components/ui/`.
-- **Customization:** Do not treat shadcn components as immutable library code. Update, restyle, and extend them directly in `components/ui/` to meet specific project needs.
-- **Documentation:** Refer to `shadcn-docs.txt` for a complete list of available components, installation guides, and advanced usage patterns.
-- **Consistency:** Before building a custom UI element, check if a shadcn primitive exists. If it does, use it as the base.
+- **Customization Mandate:** Do not use default shadcn styles. Immediately modify `components/ui/` files to match the design system:
+    - **Remove Borders:** Strip `border` classes from Cards, Accordions, and Separators. Use tonal shifts instead.
+    - **Roundedness:** Stick to `md` (0.375rem) or `lg` (0.5rem). Avoid `xl` or `full` for main containers.
+    - **Inputs:** Use the "Ghost Border" (outline-variant at 10% opacity) and white background.
+    - **Buttons:** Apply the brand gradient to Primary buttons and `surface-container-high` to Secondary buttons.
+- **Documentation:** Refer to `shadcn-docs.txt` for components and `DESIGN_SYSTEM.md` for specific tonal values and layout rules.
+- **Consistency:** If a shadcn primitive exists, use it as the base and apply the Luminous Minimalism overrides.
 
 ## 6. Component Design & Code Organization
 
