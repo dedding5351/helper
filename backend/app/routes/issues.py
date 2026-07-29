@@ -1,12 +1,12 @@
 from fastapi import APIRouter, HTTPException, Depends, Query
 from typing import Optional
-from app.models.issue import (
+from models.issue import (
     IssueListResponse, IssueDetailResponse, Issue, 
     ActivityEvent, IssueStatusUpdate, CommentCreate, IssueCreate, IssueUpdate,
     BulkIssueUpdate, BulkUpdateResponse
 )
-from app.services.issue_service import IssueService
-from app.core.dependencies import get_issue_service, get_current_user_id
+from services.issue_service import IssueService
+from core.dependencies import get_issue_service, get_current_user_id
 
 router = APIRouter(tags=["issues"])
 

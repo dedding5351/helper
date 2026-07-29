@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field, ConfigDict, computed_field
 from typing import Optional, List
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text
 from sqlalchemy.orm import relationship
-from app.core.database import Base
+from core.database import Base
 from datetime import datetime
 import json
 

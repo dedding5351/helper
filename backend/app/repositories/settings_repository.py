@@ -1,6 +1,6 @@
 from typing import Optional
 from sqlalchemy.orm import Session
-from app.models.settings import UserSettingsDB
+from models.settings import UserSettingsDB
 import json
 
 class SettingsRepository:

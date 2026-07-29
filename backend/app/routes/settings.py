@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
-from app.models.settings import UserSettingsResponse, PreferencesUpdate
-from app.services.settings_service import SettingsService
-from app.core.dependencies import get_settings_service, get_current_user_id
+from models.settings import UserSettingsResponse, PreferencesUpdate
+from services.settings_service import SettingsService
+from core.dependencies import get_settings_service, get_current_user_id
 
 router = APIRouter(tags=["settings"])
 

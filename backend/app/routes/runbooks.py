@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, Query
 from typing import Optional
-from app.models.runbook import RunbookListResponse
-from app.services.runbook_service import RunbookService
-from app.core.dependencies import get_runbook_service
+from models.runbook import RunbookListResponse
+from services.runbook_service import RunbookService
+from core.dependencies import get_runbook_service
 
 router = APIRouter(tags=["runbooks"])
 

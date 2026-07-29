@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional
 from sqlalchemy import Column, String, Float
-from app.core.database import Base
+from core.database import Base
 
 class ItemDB(Base):
     __tablename__ = "items"

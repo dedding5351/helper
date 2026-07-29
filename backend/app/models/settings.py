@@ -1,6 +1,6 @@
 from pydantic import BaseModel, ConfigDict
 from sqlalchemy import Column, String, Text
-from app.core.database import Base
+from core.database import Base
 import json
 
 # --- SQLAlchemy DB Models ---

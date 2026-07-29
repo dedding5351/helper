@@ -1,6 +1,6 @@
 from typing import List, Optional
-from app.repositories.item_repository import ItemRepository
-from app.models.item import Item, ItemCreate
+from repositories.item_repository import ItemRepository
+from models.item import Item, ItemCreate
 
 class ItemService:
     """

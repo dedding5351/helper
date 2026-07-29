@@ -1,6 +1,6 @@
 from typing import List, Optional
 from sqlalchemy.orm import Session
-from app.models.runbook import RunbookDB
+from models.runbook import RunbookDB
 
 class RunbookRepository:
     """

@@ -2,7 +2,7 @@ from pydantic import BaseModel, ConfigDict
 from typing import Optional, List
 from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey
 from sqlalchemy.sql import func
-from app.core.database import Base
+from core.database import Base
 from datetime import datetime
 
 # --- SQLAlchemy DB Models ---

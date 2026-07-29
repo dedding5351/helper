@@ -1,6 +1,6 @@
 from typing import List, Optional
 from sqlalchemy.orm import Session
-from app.models.item import Item, ItemDB
+from models.item import Item, ItemDB
 import uuid
 
 class ItemRepository:

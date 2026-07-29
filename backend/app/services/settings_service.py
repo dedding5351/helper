@@ -1,5 +1,5 @@
-from app.repositories.settings_repository import SettingsRepository
-from app.models.settings import UserSettingsResponse, UserSettings, PreferencesUpdate
+from repositories.settings_repository import SettingsRepository
+from models.settings import UserSettingsResponse, UserSettings, PreferencesUpdate
 
 class SettingsService:
     """

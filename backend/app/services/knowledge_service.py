@@ -3,11 +3,11 @@ import json
 from typing import Optional, List, Dict
 from fastapi import UploadFile
 from langchain_text_splitters import MarkdownHeaderTextSplitter, RecursiveCharacterTextSplitter
-from app.repositories.knowledge_repository import KnowledgeRepository
-from app.repositories.embedding_repository import EmbeddingRepository
-from app.repositories.runbook_repository import RunbookRepository
-from app.models.knowledge import KnowledgeDocument, KnowledgeDocumentDB
-from app.models.runbook import Runbook
+from repositories.knowledge_repository import KnowledgeRepository
+from repositories.embedding_repository import EmbeddingRepository
+from repositories.runbook_repository import RunbookRepository
+from models.knowledge import KnowledgeDocument, KnowledgeDocumentDB
+from models.runbook import Runbook
 from pydantic import BaseModel
 
 try:

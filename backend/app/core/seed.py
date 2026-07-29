@@ -1,13 +1,14 @@
 from sqlalchemy.orm import Session
-from app.models.issue import IssueDB, ActivityEventDB
-from app.models.runbook import RunbookDB
-from app.models.settings import UserSettingsDB
+from models.issue import IssueDB, ActivityEventDB
+from models.runbook import RunbookDB
+from models.settings import UserSettingsDB
 import json
 from datetime import datetime
 
 def seed_data(db: Session):
     # Check if we already seeded issues
     if db.query(IssueDB).first():
+        print("Database already seeded. Skipping seeding.")
         return
 
     # --- Issues ---

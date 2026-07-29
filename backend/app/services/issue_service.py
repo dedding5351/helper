@@ -1,6 +1,6 @@
 from typing import Optional
-from app.repositories.issue_repository import IssueRepository
-from app.models.issue import (
+from repositories.issue_repository import IssueRepository
+from models.issue import (
     IssueListResponse, IssueDetailResponse, IssueMeta, 
     Issue, IssueDetail, ActivityEvent, IssueStatusUpdate, CommentCreate, IssueCreate, IssueUpdate,
     BulkIssueUpdate, BulkUpdateResponse

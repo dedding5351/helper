@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException, Depends
 from typing import List
-from app.models.item import Item, ItemCreate
-from app.services.item_service import ItemService
-from app.core.dependencies import get_item_service
+from models.item import Item, ItemCreate
+from services.item_service import ItemService
+from core.dependencies import get_item_service
 
 router = APIRouter(tags=["items"])
 

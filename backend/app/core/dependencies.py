@@ -1,19 +1,19 @@
 from typing import Generator
 from fastapi import Depends
 from sqlalchemy.orm import Session
-from app.core.database import SessionLocal
-from app.repositories.item_repository import ItemRepository
-from app.services.item_service import ItemService
-from app.repositories.issue_repository import IssueRepository
-from app.services.issue_service import IssueService
-from app.repositories.runbook_repository import RunbookRepository
-from app.services.runbook_service import RunbookService
-from app.repositories.settings_repository import SettingsRepository
-from app.services.settings_service import SettingsService
+from core.database import SessionLocal
+from repositories.item_repository import ItemRepository
+from services.item_service import ItemService
+from repositories.issue_repository import IssueRepository
+from services.issue_service import IssueService
+from repositories.runbook_repository import RunbookRepository
+from services.runbook_service import RunbookService
+from repositories.settings_repository import SettingsRepository
+from services.settings_service import SettingsService
 
-from app.repositories.knowledge_repository import KnowledgeRepository
-from app.repositories.embedding_repository import EmbeddingRepository
-from app.services.knowledge_service import KnowledgeService
+from repositories.knowledge_repository import KnowledgeRepository
+from repositories.embedding_repository import EmbeddingRepository
+from services.knowledge_service import KnowledgeService
 
 import chromadb
 from google import genai

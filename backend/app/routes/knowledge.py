@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, UploadFile, File, Form, Query, HTTPException
 from typing import Optional, List
-from app.services.knowledge_service import KnowledgeService, UploadResponse
-from app.models.knowledge import KnowledgeDocumentListResponse, KnowledgeDocument
-from app.core.dependencies import get_knowledge_service
+from services.knowledge_service import KnowledgeService, UploadResponse
+from models.knowledge import KnowledgeDocumentListResponse, KnowledgeDocument
+from core.dependencies import get_knowledge_service
 
 router = APIRouter(tags=["knowledge"])
 

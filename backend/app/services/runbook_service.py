@@ -1,6 +1,6 @@
 from typing import Optional
-from app.repositories.runbook_repository import RunbookRepository
-from app.models.runbook import RunbookListResponse, Runbook
+from repositories.runbook_repository import RunbookRepository
+from models.runbook import RunbookListResponse, Runbook
 
 class RunbookService:
     """

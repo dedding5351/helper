@@ -1,6 +1,6 @@
 from typing import List, Optional, Tuple
 from sqlalchemy.orm import Session
-from app.models.issue import IssueDB, ActivityEventDB
+from models.issue import IssueDB, ActivityEventDB
 from datetime import datetime
 
 class IssueRepository:

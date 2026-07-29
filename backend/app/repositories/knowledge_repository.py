@@ -1,6 +1,6 @@
 from typing import List, Optional
 from sqlalchemy.orm import Session
-from app.models.knowledge import KnowledgeDocumentDB
+from models.knowledge import KnowledgeDocumentDB
 
 class KnowledgeRepository:
     """
