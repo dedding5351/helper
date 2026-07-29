@@ -82,7 +82,7 @@ export function IssueDetailModal() {
   const handleAssigneeChange = async (newAssignee: string) => {
     if (!issue) return;
     try {
-      await IssueService.updateIssue(issue.id, { assignee: newAssignee === "" ? null : newAssignee });
+      await IssueService.updateIssue(issue.id, { assignee: newAssignee === "" ? undefined : newAssignee });
       const updatedIssue = await IssueService.getIssueById(issue.id);
       setIssue(updatedIssue.data);
     } catch (error) {

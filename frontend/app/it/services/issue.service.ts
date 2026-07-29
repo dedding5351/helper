@@ -1,7 +1,7 @@
 import { apiClient } from "./api-client";
 
 export type IssueStatus = "Open" | "In Progress" | "Resolved" | "Auto-Escalated" | "Blocked";
-export type IssuePriority = "High" | "Medium" | "Low";
+export type IssuePriority = "High" | "Medium" | "Low" | "Critical";
 
 export interface ActivityEvent {
   id: string;

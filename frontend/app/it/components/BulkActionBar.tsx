@@ -38,7 +38,7 @@ export function BulkActionBar({
 
   const handleAssigneeChange = async (assignee: string) => {
     try {
-      await IssueService.bulkUpdateIssues(selectedIds, { assignee: assignee === "" ? null : assignee });
+      await IssueService.bulkUpdateIssues(selectedIds, { assignee: assignee === "" ? undefined : assignee });
       onComplete();
     } catch (error) {
       console.error("Bulk assignee update failed", error);

@@ -31,7 +31,11 @@ export default function ITDashboardPage() {
   }
 
   useEffect(() => {
-    loadIssues();
+    const timer = setTimeout(() => {
+      loadIssues();
+    }, 0);
+
+    return () => clearTimeout(timer);
   }, [filter]);
 
   return (
