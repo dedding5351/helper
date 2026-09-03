@@ -63,9 +63,35 @@ Gemini 3.1 Pro Preview   Gemini 3 Flash
 
 ---
 
-## 🏃 Project Structure & Tracks
+## 🏃 Project Structure
 
-* `/apps/user-client`: User-facing Next.js application handling media permissions, WebRTC streaming, and status screens.
-* `/apps/escalation-dashboard`: Real-time IT admin panel rendering incoming support tickets, priority badges, and visual evidence.
-* `/services/agent`: Python agent execution environment running `livekit-agents` and model orchestration.
-* `/services/backend`: LiveKit token generation endpoint and Cloud Run webhook handler for ticket processing.
+* `/frontend`: Next.js application containing the user-facing WebRTC client (`/user`), IT Specialist escalation dashboard (`/it`), and Tauri overlay configuration.
+* `/backend`: FastAPI service (`/backend/app`), ChromaDB vector store for RAG, and the LiveKit real-time voice agent worker (`/backend/workers`).
+
+---
+
+## 🚀 Quickstart Guide
+
+### 1. Backend Setup
+```bash
+cd backend
+cp .env.example .env.local   # Configure your GEMINI_API_KEY, LIVEKIT credentials
+uv venv
+uv pip install -r requirements.txt
+
+# Start the FastAPI server
+uv run uvicorn app.main:app --reload
+
+# In a separate terminal, start the voice agent worker
+uv run python -m workers.agent dev
+```
+
+### 2. Frontend Setup
+```bash
+cd frontend
+cp .env.example .env.local   # Configure LIVEKIT and NEXT_PUBLIC_API_URL
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) to view the portal.

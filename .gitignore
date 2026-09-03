@@ -219,4 +219,20 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
+# Environments
+.env*
+!.env.example
 .env.local
+
+# Databases
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+*.sqlite3-journal
+sql_app.db
+
+# Storage & RAG
+chroma_db/
+uploads/
+

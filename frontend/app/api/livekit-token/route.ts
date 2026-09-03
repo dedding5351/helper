@@ -24,13 +24,19 @@ export async function POST() {
     );
   }
 
+  // Production note: For public deployments, verify the user's authenticated session
+  // (e.g. via NextAuth, Clerk, or session cookie) before generating access tokens
+  // to prevent unauthenticated credit and quota exhaustion.
+
   const identity = `user-${crypto.randomUUID()}`;
   const roomName = `support-${Date.now()}`;
 
+  // Restrict TTL to 10 minutes (sufficient for initial session negotiation)
   const at = new AccessToken(apiKey, apiSecret, {
     identity,
-    ttl: 60 * 30,
+    ttl: 60 * 10,
   });
+
   at.addGrant({
     room: roomName,
     roomJoin: true,
